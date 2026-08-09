@@ -1,8 +1,6 @@
-import sdl from "@kmamal/sdl";
-import { createCanvas, CanvasRenderingContext2D } from "canvas";
-import { astar } from "../src/solver/astar";
-import { generateMaze, makeMazeProblem, MazeGrid, MazeState } from "./maze/maze";
-import { generateSolvablePuzzle, makePuzzleProblem, PuzzleState } from "./puzzle/puzzle";
+import { astar } from "../../src/solver/astar";
+import { generateMaze, makeMazeProblem, MazeGrid, MazeState } from "../maze/maze";
+import { generateSolvablePuzzle, makePuzzleProblem, PuzzleState } from "../puzzle/puzzle";
 
 type Mode = "menu" | "maze" | "puzzle";
 
@@ -10,15 +8,11 @@ const WIDTH = 640;
 const HEIGHT = 640;
 const FRAME_MS = 140;
 
-const window = sdl.video.createWindow({
-    title: "A* Solver",
-    width: WIDTH,
-    height: HEIGHT,
-    resizable: false,
-});
-
-const canvas = createCanvas(WIDTH, HEIGHT);
-const ctx = canvas.getContext("2d");
+const canvas = document.createElement("canvas");
+canvas.width = WIDTH;
+canvas.height = HEIGHT;
+document.getElementById("app")!.appendChild(canvas);
+const ctx = canvas.getContext("2d")!;
 
 let mode: Mode = "menu";
 let statusLine = "";
@@ -42,7 +36,7 @@ function drawMenu(): void {
     ctx.font = "20px sans-serif";
     ctx.fillText("Press M — solve a maze", WIDTH / 2, 300);
     ctx.fillText("Press P — solve the 8-puzzle", WIDTH / 2, 340);
-    ctx.fillText("Esc — quit", WIDTH / 2, 380);
+    ctx.fillText("Backspace — back to menu", WIDTH / 2, 380);
     ctx.textAlign = "left";
 }
 
@@ -70,6 +64,13 @@ function drawMaze(): void {
     ctx.strokeStyle = "#eee";
     ctx.lineWidth = 2;
 
+    const line = (x1: number, y1: number, x2: number, y2: number) => {
+        ctx.beginPath();
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
+        ctx.stroke();
+    };
+
     for (let r = 0; r < mazeGrid.rows; r++) {
         for (let c = 0; c < mazeGrid.cols; c++) {
             const x = originX + c * cellSize;
@@ -94,13 +95,6 @@ function drawMaze(): void {
     }
 
     drawStatus();
-
-    function line(x1: number, y1: number, x2: number, y2: number) {
-        ctx.beginPath();
-        ctx.moveTo(x1, y1);
-        ctx.lineTo(x2, y2);
-        ctx.stroke();
-    }
 }
 
 function startPuzzle(): void {
@@ -153,26 +147,17 @@ function drawStatus(): void {
     ctx.fillRect(0, HEIGHT - 34, WIDTH, 34);
     ctx.fillStyle = "#aaa";
     ctx.font = "16px sans-serif";
-    ctx.fillText(statusLine + "   (Backspace: menu, Esc: quit)", 12, HEIGHT - 12);
+    ctx.fillText(statusLine + "   (Backspace: menu)", 12, HEIGHT - 12);
 }
 
 function render(): void {
     if (mode === "menu") drawMenu();
     else if (mode === "maze") drawMaze();
     else if (mode === "puzzle") drawPuzzle();
-
-    // node-canvas gives raw pixels back as BGRA, which is what @kmamal/sdl
-    // expects for the "bgra32" pixel format below.
-    const buffer = canvas.toBuffer("raw");
-    window.render(WIDTH, HEIGHT, WIDTH * 4, "bgra32", buffer);
 }
 
-window.on("keyDown", (event: { key: string }) => {
-    const key = event.key;
-
-    if (key === "escape") {
-        process.exit(0);
-    }
+window.addEventListener("keydown", (event) => {
+    const key = event.key.toLowerCase();
 
     if (mode === "menu") {
         if (key === "m") startMaze();

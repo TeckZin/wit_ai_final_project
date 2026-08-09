@@ -1,18 +1,16 @@
 {
-  "name": "astar-solver",
+  "name": "wit final ai final project",
   "version": "1.0.0",
   "private": true,
-  "description": "A* maze + 8-puzzle solver with an SDL window front-end",
+  "description": "A* maze + 8-puzzle solver, rendered on an HTML5 canvas",
   "scripts": {
-    "start": "ts-node app/main.ts"
-  },
-  "dependencies": {
-    "@kmamal/sdl": "^0.11.3",
-    "canvas": "^2.11.2"
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
   },
   "devDependencies": {
     "@types/node": "^20.14.0",
-    "ts-node": "^10.9.2",
-    "typescript": "^5.5.0"
+    "typescript": "^5.5.0",
+    "vite": "^5.4.0"
   }
 }
