@@ -1,17 +1,18 @@
 {
-  "name": "wit-ai-final-project",
+  "name": "astar-solver",
   "version": "1.0.0",
-  "description": "A* search comparative study: maze navigation and 8-puzzle domains",
   "private": true,
+  "description": "A* maze + 8-puzzle solver with an SDL window front-end",
   "scripts": {
-    "puzzle": "ts-node app/puzzle/main.ts",
-    "puzzle:demo": "ts-node app/puzzle/demo.ts",
-    "maze": "ts-node app/maze/main.ts",
-    "solver:test": "ts-node src/solver/main.ts"
+    "start": "ts-node app/main.ts"
+  },
+  "dependencies": {
+    "@kmamal/sdl": "^0.11.3",
+    "canvas": "^2.11.2"
   },
   "devDependencies": {
-    "typescript": "^5.5.0",
+    "@types/node": "^20.14.0",
     "ts-node": "^10.9.2",
-    "@types/node": "^20.14.0"
+    "typescript": "^5.5.0"
   }
 }
